@@ -7,6 +7,8 @@ const App = () => {
     const [image, setImage] = useState('');
     const [dateTime, setDateTime] = useState('');
     const [darkMode, setDarkMode] = useState(false);
+    const [tasks, setTasks] = useState([]);
+    const [newTask, setNewTask] = useState('');
 
     const fetchAdvice = async () => {
         try {
@@ -40,11 +42,38 @@ const App = () => {
         setDarkMode(!darkMode);
     };
 
+    // Handle new tasks
+    const handleAddTask = () => {
+        if (newTask.trim() === '') return;
+        const updatedTasks = [...tasks, { text: newTask, completed: false }];
+        setTasks(updatedTasks);
+        setNewTask('');
+        localStorage.setItem('tasks', JSON.stringify(updatedTasks));
+    };
+
+    const handleToggleTask = (index) => {
+        const updatedTasks = tasks.map((task, i) =>
+            i === index ? { ...task, completed: !task.completed } : task
+        );
+        setTasks(updatedTasks);
+        localStorage.setItem('tasks', JSON.stringify(updatedTasks));
+    };
+
+    const handleDeleteTask = (index) => {
+        const updatedTasks = tasks.filter((_, i) => i !== index);
+        setTasks(updatedTasks);
+        localStorage.setItem('tasks', JSON.stringify(updatedTasks));
+    };
+
     useEffect(() => {
         fetchAdvice();
         fetchRandomImage();
         updateDateTime();
         const interval = setInterval(updateDateTime, 1000);
+
+        // Load tasks from localStorage
+        const savedTasks = JSON.parse(localStorage.getItem('tasks'));
+        if (savedTasks) setTasks(savedTasks);
 
         if (darkMode) {
             document.body.classList.add('dark-mode');
@@ -58,6 +87,8 @@ const App = () => {
     }, [darkMode]);
 
     return (
+        
+        
         <div className={`App ${darkMode ? 'dark-mode' : ''}`}>
             <div className="toggle-container">
                 <label className="switch">
@@ -72,6 +103,33 @@ const App = () => {
             </div>
             <img src={image} alt="Random Inspiration" className="photo" />
             <button onClick={fetchAdvice}>Get New Advice</button>
+
+            {/* To-Do List Section */}
+            <div className="todo-container">
+                <h2>To-Do List</h2>
+                <input
+                    type="text"
+                    value={newTask}
+                    onChange={(e) => setNewTask(e.target.value)}
+                    placeholder="Add a new task..."
+                />
+                <button onClick={handleAddTask}>Add Task</button>
+                <ul>
+                    {tasks.map((task, index) => (
+                        <li key={index}>
+                            <input
+                                type="checkbox"
+                                checked={task.completed}
+                                onChange={() => handleToggleTask(index)}
+                            />
+                            <span style={{ textDecoration: task.completed ? 'line-through' : 'none' }}>
+                                {task.text}
+                            </span>
+                            <button onClick={() => handleDeleteTask(index)}>Delete</button>
+                        </li>
+                    ))}
+                </ul>
+            </div>
         </div>
     );
 };

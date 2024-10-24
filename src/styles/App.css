@@ -1,19 +1,24 @@
 body, html {
   margin: 0;
   padding: 0;
-  font-family: 'Poppins', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+      sans-serif;
   background: linear-gradient(to bottom, #f0f4f8, #e8eff5);
+  min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
   display: flex;
   justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  overflow: hidden;
-  transition: background-color 0.3s ease-in-out, background 0.3s ease-in-out;
+  align-items: flex-start; /* Align to start */
+  padding: 0;
+  box-sizing: border-box;
 }
-
 body.dark-mode {
   background: linear-gradient(to bottom, #121212, #222222);
 }
+
+
 
 .App {
   text-align: center;
@@ -26,6 +31,14 @@ body.dark-mode {
   transition: background-color 0.3s ease-in-out, background-image 0.5s ease-in-out;
   backdrop-filter: blur(10px);
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between; /* Spread elements to use full space */
+  padding: 2em;
+  min-height: 100vh; /* Make sure it covers full height */
+  box-sizing: border-box;
+
 }
 
 .dark-mode {
@@ -172,9 +185,229 @@ input:checked + .slider:before {
 }
 
 .photo {
-  width: 100%;
-  max-width: 500px;
+  width: 80%;
+  max-width: 1200px;
+  margin-bottom: 20px;
   border-radius: 15px;
   box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
   margin: 1em 0;
+}
+
+/* To-Do List Container */
+.todo-container {
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 1.5em;
+  border-radius: 15px;
+  margin-top: 2em;
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.15);
+  text-align: left;
+  max-width: 600px;
+  width: 90%;
+  margin: 2em auto; /* Centering */
+}
+
+/* To-Do List Header */
+.todo-container h2 {
+  color: #ff6f61;
+  margin-bottom: 0.5em;
+  font-weight: bold;
+  font-size: 1.8em;
+  text-align: center;
+  border-bottom: 2px solid #ff6f61;
+  padding-bottom: 10px;
+}
+
+/* Input field styling */
+.todo-container input[type="text"] {
+  padding: 10px;
+  border-radius: 25px;
+  border: 1px solid #ddd;
+  width: calc(100% - 120px); /* Ensures it doesn’t clash with the button */
+  margin-bottom: 15px;
+  font-size: 1em;
+  outline: none;
+  transition: border-color 0.3s ease;
+  box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Change border color on focus */
+.todo-container input[type="text"]:focus {
+  border-color: #ff6f61;
+}
+
+/* Button styling for adding and deleting tasks */
+.todo-container .add-task-button, .todo-container .delete-task-button {
+  padding: 8px 15px;
+  border-radius: 25px;
+  border: none;
+  background-color: #ff6f61;
+  color: white;
+  font-size: 0.9em;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin-left: 10px;
+  box-shadow: 0px 3px 10px rgba(255, 111, 97, 0.3);
+}
+
+/* Button hover and active effects */
+.todo-container .add-task-button:hover, .todo-container .delete-task-button:hover {
+  background-color: #ff3b3b;
+  transform: scale(1.05);
+}
+
+/* Add task button specific styles */
+.todo-container .add-task-button {
+  width: 100px;
+}
+
+/* Delete task button specific styles */
+.todo-container .delete-task-button {
+  background-color: #e74c3c;
+  margin-left: 5px;
+}
+
+/* Task list styling */
+.todo-container ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+/* Each task item */
+.todo-container li {
+  display: flex;
+  align-items: center;
+  margin: 15px 0;
+  background-color: #fefefe;
+  padding: 10px 15px;
+  border-radius: 20px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s;
+}
+
+/* Checkbox styling */
+.todo-container li input[type="checkbox"] {
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+/* Task text */
+.todo-container li span {
+  flex-grow: 1;
+  font-size: 1em;
+  word-break: break-word;
+  color: #333;
+}
+
+/* Dark mode adaptations */
+.dark-mode .todo-container {
+  background-color: rgba(50, 50, 50, 0.8);
+}
+
+.dark-mode .todo-container h2 {
+  color: #ff9e80;
+  border-color: #ff9e80;
+}
+
+.dark-mode .todo-container li {
+  background-color: rgba(60, 60, 60, 0.9);
+}
+
+.dark-mode .todo-container li span {
+  color: #e0e0e0;
+}
+
+.dark-mode .todo-container input[type="text"] {
+  background-color: rgba(40, 40, 40, 0.8);
+  color: #e0e0e0;
+  border-color: #444;
+}
+
+.dark-mode .add-task-button, .dark-mode .delete-task-button {
+  box-shadow: 0px 3px 10px rgba(255, 111, 97, 0.2);
+}
+
+.photo, .todo-container, .advice, .time-date {
+  width: 80%;
+  max-width: 1200px;
+  margin-bottom: 20px; /* Add spacing */
+}
+.advice {
+  background-color: #fef9c3;
+  padding: 1.5em;
+  border-radius: 15px;
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.15);
+  font-size: 1.2em;
+  width: 100%; /* Stretch to full width */
+  text-align: center;
+}
+
+/* Dark mode */
+.dark-mode .todo-container, .dark-mode .advice {
+  background-color: rgba(34, 34, 34, 0.9);
+  color: #ffffff;
+}
+
+
+/* Create a grid layout */
+.app-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Two equal columns */
+  grid-template-rows: auto auto; /* Auto-adjust rows */
+  gap: 40px; /* Larger gap to avoid overlap */
+  max-width: 1200px; /* Adjust for more space */
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+/* Ensure each component uses full width of the grid cell */
+.grid-item {
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 1.5em;
+  border-radius: 15px;
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.15);
+  width: 100%; /* Ensure it stretches fully */
+  box-sizing: border-box;
+}
+
+
+/* Dark mode adaptation */
+.dark-mode .grid-item {
+  background-color: rgba(34, 34, 34, 0.9);
+  color: #ffffff;
+}
+
+/* Daily Inspiration takes top-left spot */
+.daily-inspiration {
+  grid-column: 1 / 2; /* Span one column */
+  grid-row: 1 / 2; /* First row */
+}
+
+/* Image takes bottom-left spot */
+.photo-container {
+  grid-column: 1 / 2; /* Span one column */
+  grid-row: 2 / 3; /* Second row */
+  width: 100%; /* Ensure it takes up the full width of the grid */
+}
+
+/* To-Do list takes up the right side */
+.todo-container {
+  grid-column: 2 / 3; /* Make sure it's in the right column */
+  grid-row: 1 / 3; /* Make it span vertically across two rows */
+  width: 100%;
+  max-width: 500px; /* Limit width to prevent overflow */
+  padding: 1.5em;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 15px;
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.15);
+  margin: 0; /* Remove any unwanted margin */
+}
+
+/* Image styling */
+.photo {
+  width: 100%;
+  max-width: 100%;
+  border-radius: 15px;
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
+  margin-top: 10px;
 }
