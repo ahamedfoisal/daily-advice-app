@@ -52,11 +52,17 @@ const App = () => {
     };
 
     const handleToggleTask = (index) => {
-        const updatedTasks = tasks.map((task, i) =>
-            i === index ? { ...task, completed: !task.completed } : task
-        );
+        const updatedTasks = [...tasks];
+        updatedTasks[index].completed = !updatedTasks[index].completed;
+        
+        // Add or remove animation class
+        if (updatedTasks[index].completed) {
+            updatedTasks[index].animation = 'animate-complete';
+        } else {
+            updatedTasks[index].animation = '';
+        }
+    
         setTasks(updatedTasks);
-        localStorage.setItem('tasks', JSON.stringify(updatedTasks));
     };
 
     const handleDeleteTask = (index) => {
@@ -87,8 +93,6 @@ const App = () => {
     }, [darkMode]);
 
     return (
-        
-        
         <div className={`App ${darkMode ? 'dark-mode' : ''}`}>
             <div className="toggle-container">
                 <label className="switch">
@@ -96,39 +100,50 @@ const App = () => {
                     <span className="slider"></span>
                 </label>
             </div>
-            <h1>Daily Inspiration</h1>
-            <div className="time-date">{dateTime}</div>
-            <div className="advice">
-                <p><strong>Advice:</strong> {advice}</p>
-            </div>
-            <img src={image} alt="Random Inspiration" className="photo" />
-            <button onClick={fetchAdvice}>Get New Advice</button>
-
-            {/* To-Do List Section */}
-            <div className="todo-container">
-                <h2>To-Do List</h2>
-                <input
-                    type="text"
-                    value={newTask}
-                    onChange={(e) => setNewTask(e.target.value)}
-                    placeholder="Add a new task..."
-                />
-                <button onClick={handleAddTask}>Add Task</button>
-                <ul>
-                    {tasks.map((task, index) => (
-                        <li key={index}>
-                            <input
-                                type="checkbox"
-                                checked={task.completed}
-                                onChange={() => handleToggleTask(index)}
-                            />
-                            <span style={{ textDecoration: task.completed ? 'line-through' : 'none' }}>
-                                {task.text}
-                            </span>
-                            <button onClick={() => handleDeleteTask(index)}>Delete</button>
-                        </li>
-                    ))}
-                </ul>
+            <div className="app-grid">
+                <div className="grid-item daily-inspiration">
+                    <h1>Daily Inspiration</h1>
+                    <div className="time-date">{dateTime}</div>
+                    <div className="advice">
+                        <p><strong>Advice:</strong> {advice}</p>
+                    </div>
+                    <button onClick={fetchAdvice}>Get New Advice</button>
+                </div>
+                <div className="grid-item photo-container">
+                    <img src={image} alt="Random Inspiration" className="photo" />
+                </div>
+                <div className="grid-item todo-container">
+                    <h2>To-Do List</h2>
+                    <input
+                        type="text"
+                        value={newTask}
+                        onChange={(e) => setNewTask(e.target.value)}
+                        placeholder="Add a new task..."
+                    />
+                    <button onClick={handleAddTask} className="add-task-button">Add Task</button>
+                    <ul>
+                        {tasks.map((task, index) => (
+                            <li 
+                                key={index} 
+                                className={`grid-item ${task.completed ? 'completed-task animate-complete' : ''}`}
+                            >
+                                <input
+                                    type="checkbox"
+                                    checked={task.completed}
+                                    onChange={() => handleToggleTask(index)}
+                                    className="scale-effect"
+                                />
+                                <span 
+                                    style={{ textDecoration: task.completed ? 'line-through' : 'none' }}
+                                    className={task.completed ? 'completed-task' : ''}
+                                >
+                                    {task.text}
+                                </span>
+                                <button onClick={() => handleDeleteTask(index)} className="delete-task-button">Delete</button>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
             </div>
         </div>
     );
