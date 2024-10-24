@@ -121,22 +121,23 @@ const App = () => {
                         placeholder="Add a new task..."
                     />
                     <button onClick={handleAddTask} className="add-task-button">Add Task</button>
+                    
+                    {/* Task Tally */}
+                    <div className="task-tally">
+                        <p>Total Tasks: {tasks.length}</p>
+                        <p>Completed: {tasks.filter(task => task.completed).length}</p>
+                        <p>Remaining: {tasks.filter(task => !task.completed).length}</p>
+                    </div>
+
                     <ul>
                         {tasks.map((task, index) => (
-                            <li 
-                                key={index} 
-                                className={`grid-item ${task.completed ? 'completed-task animate-complete' : ''}`}
-                            >
+                            <li key={index}>
                                 <input
                                     type="checkbox"
                                     checked={task.completed}
                                     onChange={() => handleToggleTask(index)}
-                                    className="scale-effect"
                                 />
-                                <span 
-                                    style={{ textDecoration: task.completed ? 'line-through' : 'none' }}
-                                    className={task.completed ? 'completed-task' : ''}
-                                >
+                                <span style={{ textDecoration: task.completed ? 'line-through' : 'none' }}>
                                     {task.text}
                                 </span>
                                 <button onClick={() => handleDeleteTask(index)} className="delete-task-button">Delete</button>
