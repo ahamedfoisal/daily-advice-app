@@ -1,38 +1,77 @@
-import React from 'react';
-import useAdvice from './hooks/useAdvice';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import './styles/App.css';
-import { useEffect, useState } from 'react';
 
 const App = () => {
-    const { advice, loading, error, fetchAdvice } = useAdvice();
-    const [savedAdvice, setSavedAdvice] = useState(
-        JSON.parse(localStorage.getItem('savedAdvice')) || []
-    );
+    const [advice, setAdvice] = useState('');
+    const [image, setImage] = useState('');
+    const [dateTime, setDateTime] = useState('');
+    const [darkMode, setDarkMode] = useState(false);
 
-    useEffect(() => {
-        localStorage.setItem('savedAdvice', JSON.stringify(savedAdvice));
-    }, [savedAdvice]);
-
-    const saveAdvice = () => {
-        if (advice && !savedAdvice.includes(advice)) {
-            setSavedAdvice([...savedAdvice, advice]);
+    const fetchAdvice = async () => {
+        try {
+            const response = await axios.get('https://api.adviceslip.com/advice');
+            setAdvice(response.data.slip.advice);
+        } catch (error) {
+            setAdvice("Couldn't fetch advice. Please try again!");
         }
     };
 
-    return (
-        <div className="App">
-            <h1>Daily Advice</h1>
-            {loading ? <p>Loading...</p> : <p>{advice}</p>}
-            {error && <p>{error}</p>}
-            <button onClick={fetchAdvice}>Get New Advice</button>
-            <button onClick={saveAdvice}>Save Advice</button>
+    const fetchRandomImage = () => {
+        const randomImageUrl = `https://picsum.photos/800/600?random=${Math.floor(Math.random() * 1000)}`;
+        setImage(randomImageUrl);
+    };
 
-            <h2>Saved Advice</h2>
-            <ul>
-                {savedAdvice.map((item, index) => (
-                    <li key={index}>{item}</li>
-                ))}
-            </ul>
+    const updateDateTime = () => {
+        const now = new Date();
+        const formattedDateTime = now.toLocaleString('en-US', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+        });
+        setDateTime(formattedDateTime);
+    };
+
+    const toggleDarkMode = () => {
+        setDarkMode(!darkMode);
+    };
+
+    useEffect(() => {
+        fetchAdvice();
+        fetchRandomImage();
+        updateDateTime();
+        const interval = setInterval(updateDateTime, 1000);
+
+        if (darkMode) {
+            document.body.classList.add('dark-mode');
+        } else {
+            document.body.classList.remove('dark-mode');
+        }
+
+        return () => {
+            clearInterval(interval);
+        };
+    }, [darkMode]);
+
+    return (
+        <div className={`App ${darkMode ? 'dark-mode' : ''}`}>
+            <div className="toggle-container">
+                <label className="switch">
+                    <input type="checkbox" onChange={toggleDarkMode} />
+                    <span className="slider"></span>
+                </label>
+            </div>
+            <h1>Daily Inspiration</h1>
+            <div className="time-date">{dateTime}</div>
+            <div className="advice">
+                <p><strong>Advice:</strong> {advice}</p>
+            </div>
+            <img src={image} alt="Random Inspiration" className="photo" />
+            <button onClick={fetchAdvice}>Get New Advice</button>
         </div>
     );
 };

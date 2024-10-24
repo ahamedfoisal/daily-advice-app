@@ -3,17 +3,18 @@ import axios from 'axios';
 
 const useAdvice = () => {
     const [advice, setAdvice] = useState('');
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     const fetchAdvice = async () => {
-        setLoading(true);
         try {
+            setLoading(true);
             const response = await axios.get('https://api.adviceslip.com/advice');
             setAdvice(response.data.slip.advice);
             setError(null);
-        } catch (err) {
-            setError('Failed to fetch advice');
+        } catch (error) {
+            setError("Couldn't fetch advice. Please try again!");
+            setAdvice('');
         } finally {
             setLoading(false);
         }
