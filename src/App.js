@@ -39,7 +39,7 @@ const App = () => {
     };
 
     const toggleDarkMode = () => {
-        setDarkMode(!darkMode);
+        setDarkMode((prevMode) => !prevMode);
     };
 
     // Handle new tasks
@@ -52,17 +52,11 @@ const App = () => {
     };
 
     const handleToggleTask = (index) => {
-        const updatedTasks = [...tasks];
-        updatedTasks[index].completed = !updatedTasks[index].completed;
-        
-        // Add or remove animation class
-        if (updatedTasks[index].completed) {
-            updatedTasks[index].animation = 'animate-complete';
-        } else {
-            updatedTasks[index].animation = '';
-        }
-    
+        const updatedTasks = tasks.map((task, i) =>
+            i === index ? { ...task, completed: !task.completed } : task
+        );
         setTasks(updatedTasks);
+        localStorage.setItem('tasks', JSON.stringify(updatedTasks));
     };
 
     const handleDeleteTask = (index) => {
@@ -81,22 +75,24 @@ const App = () => {
         const savedTasks = JSON.parse(localStorage.getItem('tasks'));
         if (savedTasks) setTasks(savedTasks);
 
+        return () => {
+            clearInterval(interval);
+        };
+    }, []);
+
+    useEffect(() => {
         if (darkMode) {
             document.body.classList.add('dark-mode');
         } else {
             document.body.classList.remove('dark-mode');
         }
-
-        return () => {
-            clearInterval(interval);
-        };
     }, [darkMode]);
 
     return (
         <div className={`App ${darkMode ? 'dark-mode' : ''}`}>
             <div className="toggle-container">
                 <label className="switch">
-                    <input type="checkbox" onChange={toggleDarkMode} />
+                    <input type="checkbox" onChange={toggleDarkMode} checked={darkMode} />
                     <span className="slider"></span>
                 </label>
             </div>
@@ -131,7 +127,7 @@ const App = () => {
 
                     <ul>
                         {tasks.map((task, index) => (
-                            <li key={index}>
+                            <li key={index} className={task.completed ? 'completed-task' : ''}>
                                 <input
                                     type="checkbox"
                                     checked={task.completed}
